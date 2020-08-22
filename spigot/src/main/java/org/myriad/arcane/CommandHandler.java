@@ -167,7 +167,7 @@ public class CommandHandler {
         return this.settings.COMMAND_PREFIX;
     }
 
-    public static class CommandInfo {
+    public static class BaseCommand {
 
         protected CommandSender sender;
         protected String command, label;
