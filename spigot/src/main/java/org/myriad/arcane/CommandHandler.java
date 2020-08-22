@@ -43,8 +43,7 @@ public class CommandHandler {
 
         try {
             Class<?> setupClass = Class.forName(this.settings.PACKAGE_PATH + "." + this.settings.COMMAND_PREFIX + label);
-            Object classInstance = setupClass.newInstance();
-
+            Object classInstance = setupClass.getDeclaredConstructor().newInstance();
 
             execute();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
@@ -57,33 +56,33 @@ public class CommandHandler {
             addCommand(command);
         }
 
-        Object classInstance = cmdClasses.get(command).cmdclass.newInstance();
+        Object classInstance = cmdClasses.get(command).cmdclass.getDeclaredConstructor().newInstance();
 
         cmdClasses.get(command).setParams.invoke(classInstance, sender, command, label, args);
 
         switch(findCase()) {
 
-            //Console no args
+            // Console no args
             case 1: {
                 cmdClasses.get(command).runConsole.invoke(classInstance);
                 break;
             }
 
-            //Console args
+            // Console args
             case 2: {
-                cmdClasses.get(command).runConsoleArgs.invoke(classInstance, args);
+                cmdClasses.get(command).runConsoleArgs.invoke(classInstance, (Object) args);
                 break;
             }
 
-            //Player no args
+            // Player no args
             case 11: {
                 cmdClasses.get(command).run.invoke(classInstance);
                 break;
             }
 
-            //Player args
+            // Player args
             case 12: {
-                cmdClasses.get(command).runArgs.invoke(classInstance, args);
+                cmdClasses.get(command).runArgs.invoke(classInstance, (Object) args);
                 break;
             }
         }
@@ -101,7 +100,6 @@ public class CommandHandler {
         }
 
         return _case;
-
     }
 
     private void addCommand(String name) throws ClassNotFoundException, NoSuchMethodException, SecurityException {
@@ -135,7 +133,6 @@ public class CommandHandler {
         }
 
         cmdClasses.put(name, commandClass);
-
     }
 
     private class CommandClass {
